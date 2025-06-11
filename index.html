@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔐 رمزنگاری با اموجی | Emoji Encryptor Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      direction: rtl;
+    }
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #fdfcfb, #e2d1c3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    header {
+      background-color: #ff6f61;
+      width: 100%;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.8rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    main {
+      flex: 1;
+      padding: 30px;
+      width: 100%;
+      max-width: 700px;
+    }
+    textarea, input {
+      width: 100%;
+      padding: 15px;
+      margin: 15px 0;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      font-size: 1rem;
+    }
+    button {
+      background-color: #ff6f61;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #e6544c;
+    }
+    .btns {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .output {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 1.1rem;
+      text-align: left;
+      direction: ltr;
+    }
+    footer {
+      padding: 20px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <header>🔐 ابزار رمزنگاری متن با اموجی - Emoji Encryptor Pro</header>
+  <main>
+    <label for="text">📝 متن خود را وارد کنید:</label>
+    <textarea id="text" rows="4" placeholder="سلام نیکان..."></textarea>
+
+    <label for="key">🔑 رمز عبور:</label>
+    <input type="text" id="key" placeholder="مثلاً: mySecret123">
+
+    <div class="btns">
+      <button onclick="encrypt()">رمزنگاری</button>
+      <button onclick="decrypt()">رمزگشایی</button>
+      <button onclick="copyOutput()">📋 کپی خروجی</button>
+    </div>
+
+    <div class="output" id="output">⬇️ خروجی اینجا نمایش داده می‌شود</div>
+  </main>
+  <footer>ساخته شده با ❤️ توسط نیکان | Open Source در GitHub</footer>
+
+  <script>
+    const emojiMap = Array.from("😀😃😄😁😆😅😂🤣😊😇🙂🙃😉😌😍🥰😘😗😙😚😋😛😝😜🤪🤨🧐🤓😎🥸🤩🤯😳🥵🥶😱😨😰😥😓🤗🤔🤭🤫🤥😶😐😑");
+
+    function toCharCodes(text, key) {
+      const keyCodes = [...key].map(c => c.charCodeAt(0));
+      return [...text].map((c, i) => c.charCodeAt(0) ^ keyCodes[i % keyCodes.length]);
+    }
+
+    function numberToEmoji(num) {
+      const base = emojiMap.length;
+      let digits = [];
+      do {
+        digits.unshift(emojiMap[num % base]);
+        num = Math.floor(num / base);
+      } while (num > 0);
+      return digits.join('');
+    }
+
+    function emojiToNumber(emojiStr) {
+      const base = emojiMap.length;
+      return [...emojiStr].reduce((acc, emj) => acc * base + emojiMap.indexOf(emj), 0);
+    }
+
+    function encrypt() {
+      const text = document.getElementById("text").value;
+      const key = document.getElementById("key").value;
+      if (!text || !key) return alert("متن و رمز عبور را وارد کنید.");
+      const codes = toCharCodes(text, key);
+      const encrypted = codes.map(code => numberToEmoji(code) + " ").join("").trim();
+      document.getElementById("output").innerText = encrypted;
+    }
+
+    function decrypt() {
+      const encrypted = document.getElementById("text").value.trim();
+      const key = document.getElementById("key").value;
+      if (!encrypted || !key) return alert("رمزگذاری‌شده و رمز عبور را وارد کنید.");
+
+      const emojiBlocks = encrypted.split(" ");
+      const keyCodes = [...key].map(c => c.charCodeAt(0));
+      const codes = emojiBlocks.map(block => emojiToNumber(block));
+      const decrypted = codes.map((code, i) => String.fromCharCode(code ^ keyCodes[i % keyCodes.length])).join("");
+      document.getElementById("output").innerText = decrypted;
+    }
+
+    function copyOutput() {
+      const out = document.getElementById("output").innerText;
+      navigator.clipboard.writeText(out).then(() => alert("خروجی کپی شد!"));
+    }
+  </script>
+</body>
+</html>
