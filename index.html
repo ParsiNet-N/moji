@@ -1,154 +1,298 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🔐 رمزنگاری با اموجی | Emoji Encryptor Pro</title>
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap" rel="stylesheet">
-  <style>
-    * {
-      box-sizing: border-box;
-      direction: rtl;
-    }
-    body {
-      font-family: 'Vazirmatn', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, #fdfcfb, #e2d1c3);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-    }
-    header {
-      background-color: #ff6f61;
-      width: 100%;
-      color: white;
-      padding: 20px;
-      text-align: center;
-      font-size: 1.8rem;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-    main {
-      flex: 1;
-      padding: 30px;
-      width: 100%;
-      max-width: 700px;
-    }
-    textarea, input {
-      width: 100%;
-      padding: 15px;
-      margin: 15px 0;
-      border: none;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      font-size: 1rem;
-    }
-    button {
-      background-color: #ff6f61;
-      color: white;
-      padding: 12px 25px;
-      border: none;
-      border-radius: 12px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    button:hover {
-      background-color: #e6544c;
-    }
-    .btns {
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-    .output {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      white-space: pre-wrap;
-      word-break: break-word;
-      font-size: 1.1rem;
-      text-align: left;
-      direction: ltr;
-    }
-    footer {
-      padding: 20px;
-      text-align: center;
-      font-size: 0.9rem;
-      color: #777;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>txtmoji مشابه با لایسنس</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: #121212;
+    color: #eee;
+    font-family: 'Vazirmatn', Tahoma, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+  .container {
+    width: 100%;
+    max-width: 600px;
+    background: #222;
+    border-radius: 12px;
+    padding: 40px 30px;
+    box-shadow:
+      0 0 10px rgba(255,255,255,0.05),
+      0 0 30px rgba(0, 123, 255, 0.5);
+  }
+  h1 {
+    font-weight: 700;
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 2.4rem;
+    letter-spacing: 2px;
+    color: #0af;
+    user-select: none;
+  }
+  .input-group {
+    position: relative;
+    margin-bottom: 30px;
+  }
+  input[type=text], textarea {
+    width: 100%;
+    background: #1b1b1b;
+    border: none;
+    border-radius: 8px;
+    padding: 15px 20px;
+    font-size: 1.3rem;
+    color: #eee;
+    transition: box-shadow 0.3s ease;
+    resize: none;
+    box-shadow: inset 0 0 10px #0af33a22;
+  }
+  input[type=text]:focus, textarea:focus {
+    outline: none;
+    box-shadow: 0 0 10px #0af;
+  }
+  button {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #00d2ff, #3a47d5);
+    color: white;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.3s ease;
+    box-shadow: 0 5px 15px #00d2ffaa;
+  }
+  button:hover {
+    background: linear-gradient(90deg, #3a47d5, #00d2ff);
+    box-shadow: 0 5px 25px #00d2ffcc;
+  }
+  .error-msg {
+    color: #ff5e5e;
+    font-weight: 600;
+    text-align: center;
+    margin-top: -20px;
+    margin-bottom: 20px;
+    min-height: 24px;
+  }
+  #output {
+    background: #0a0a0a;
+    border-radius: 10px;
+    padding: 20px;
+    font-size: 1.2rem;
+    min-height: 160px;
+    color: #0af;
+    white-space: pre-wrap;
+    user-select: text;
+    box-shadow: inset 0 0 15px #0af;
+  }
+  #license-screen, #main-screen {
+    display: none;
+  }
+  #license-screen.active, #main-screen.active {
+    display: block;
+  }
+  .footer-logout {
+    margin-top: 30px;
+    background: #ff4c4c;
+    box-shadow: 0 5px 15px #ff4c4caa;
+  }
+  .footer-logout:hover {
+    background: #ff1a1a;
+    box-shadow: 0 5px 25px #ff1a1aaa;
+  }
+  /* Loading spinner */
+  .spinner {
+    border: 5px solid #222;
+    border-top: 5px solid #0af;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto 0;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+  }
+  /* Placeholder glow effect */
+  input::placeholder, textarea::placeholder {
+    color: #555;
+  }
+</style>
 </head>
 <body>
-  <header>🔐 ابزار رمزنگاری متن با اموجی - Emoji Encryptor Pro</header>
-  <main>
-    <label for="text">📝 متن خود را وارد کنید:</label>
-    <textarea id="text" rows="4" placeholder="سلام نیکان..."></textarea>
 
-    <label for="key">🔑 رمز عبور:</label>
-    <input type="text" id="key" placeholder="مثلاً: mySecret123">
+<div class="container" id="license-screen" tabindex="0" aria-label="صفحه ورود کد لایسنس">
+  <h1>کد لایسنس خود را وارد کنید</h1>
+  <div class="input-group">
+    <input type="text" id="license-input" autocomplete="off" placeholder="مثال: MY-ONLY-CODE" aria-required="true" aria-describedby="error-msg" />
+  </div>
+  <button id="btn-verify">ورود</button>
+  <div class="error-msg" id="error-msg" role="alert" aria-live="assertive"></div>
+</div>
 
-    <div class="btns">
-      <button onclick="encrypt()">رمزنگاری</button>
-      <button onclick="decrypt()">رمزگشایی</button>
-      <button onclick="copyOutput()">📋 کپی خروجی</button>
-    </div>
+<div class="container" id="main-screen" tabindex="0" aria-label="ابزار تبدیل متن به ایموجی">
+  <h1>تبدیل متن به ایموجی</h1>
+  <div class="input-group">
+    <textarea id="text-input" rows="6" placeholder="متن خود را وارد کنید..." aria-label="ورودی متن"></textarea>
+  </div>
+  <button id="btn-convert">تبدیل</button>
+  <div id="output" aria-live="polite" aria-atomic="true"></div>
+  <button id="btn-logout" class="footer-logout">خروج</button>
+</div>
 
-    <div class="output" id="output">⬇️ خروجی اینجا نمایش داده می‌شود</div>
-  </main>
-  <footer>ساخته شده با ❤️ توسط نیکان | Open Source در GitHub</footer>
+<script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+<script>
+  // لایسنس‌ها
+  const licenses = {
+    "MY-ONLY-CODE": { used: false, deviceId: null },
+    "VIP-1234": { used: false, deviceId: null },
+    "TEST-9999": { used: false, deviceId: null }
+  };
 
-  <script>
-    const emojiMap = Array.from("😀😃😄😁😆😅😂🤣😊😇🙂🙃😉😌😍🥰😘😗😙😚😋😛😝😜🤪🤨🧐🤓😎🥸🤩🤯😳🥵🥶😱😨😰😥😓🤗🤔🤭🤫🤥😶😐😑");
+  let currentDeviceId = null;
+  let currentLicense = null;
 
-    function toCharCodes(text, key) {
-      const keyCodes = [...key].map(c => c.charCodeAt(0));
-      return [...text].map((c, i) => c.charCodeAt(0) ^ keyCodes[i % keyCodes.length]);
+  // دریافت شناسه دستگاه
+  async function getDeviceId() {
+    const fp = await FingerprintJS.load();
+    const result = await fp.get();
+    return result.visitorId;
+  }
+
+  // تبدیل متن به ایموجی (شبیه txtmoji.com)
+  function textToEmoji(text) {
+    const map = {
+      smile: "😄",
+      happy: "😊",
+      love: "❤️",
+      fire: "🔥",
+      cool: "😎",
+      star: "⭐",
+      sun: "☀️",
+      moon: "🌙",
+      cat: "🐱",
+      dog: "🐶",
+      hello: "👋",
+      wow: "😲",
+      sad: "😢",
+      angry: "😠",
+      heart: "💖",
+      coffee: "☕",
+      music: "🎵",
+      phone: "📱",
+      thumbs_up: "👍",
+      ok: "👌",
+      party: "🥳"
+    };
+    let words = text.toLowerCase().split(/\s+/);
+    let result = words.map(w => map[w] || w).join(" ");
+    return result;
+  }
+
+  // اعتبارسنجی لایسنس
+  async function verifyLicense(code) {
+    if (!(code in licenses)) {
+      throw "کد لایسنس معتبر نیست.";
     }
-
-    function numberToEmoji(num) {
-      const base = emojiMap.length;
-      let digits = [];
-      do {
-        digits.unshift(emojiMap[num % base]);
-        num = Math.floor(num / base);
-      } while (num > 0);
-      return digits.join('');
+    const license = licenses[code];
+    if (license.used && license.deviceId !== currentDeviceId) {
+      throw "این لایسنس قبلاً روی دستگاه دیگری استفاده شده است.";
     }
-
-    function emojiToNumber(emojiStr) {
-      const base = emojiMap.length;
-      return [...emojiStr].reduce((acc, emj) => acc * base + emojiMap.indexOf(emj), 0);
+    if (!license.used) {
+      license.used = true;
+      license.deviceId = currentDeviceId;
     }
+    currentLicense = code;
+    localStorage.setItem('license', code);
+    localStorage.setItem('deviceId', currentDeviceId);
+    return true;
+  }
 
-    function encrypt() {
-      const text = document.getElementById("text").value;
-      const key = document.getElementById("key").value;
-      if (!text || !key) return alert("متن و رمز عبور را وارد کنید.");
-      const codes = toCharCodes(text, key);
-      const encrypted = codes.map(code => numberToEmoji(code) + " ").join("").trim();
-      document.getElementById("output").innerText = encrypted;
+  // نمایش پیام خطا
+  function showError(msg) {
+    const errDiv = document.getElementById("error-msg");
+    errDiv.textContent = msg;
+  }
+  function clearError() {
+    const errDiv = document.getElementById("error-msg");
+    errDiv.textContent = "";
+  }
+
+  // نمایش صفحه اصلی
+  function showMainScreen() {
+    document.getElementById("license-screen").classList.remove("active");
+    document.getElementById("main-screen").classList.add("active");
+    document.getElementById("text-input").focus();
+  }
+
+  // نمایش صفحه ورود لایسنس
+  function showLicenseScreen() {
+    document.getElementById("main-screen").classList.remove("active");
+    document.getElementById("license-screen").classList.add("active");
+    document.getElementById("license-input").focus();
+  }
+
+  async function init() {
+    currentDeviceId = await getDeviceId();
+    // اگر قبلاً در localStorage لایسنس داشتیم و deviceId مطابقت داشت، مستقیم وارد شو
+    const storedLicense = localStorage.getItem('license');
+    const storedDeviceId = localStorage.getItem('deviceId');
+    if (storedLicense && storedDeviceId === currentDeviceId && storedLicense in licenses) {
+      // تنظیم استفاده
+      licenses[storedLicense].used = true;
+      licenses[storedLicense].deviceId = currentDeviceId;
+      currentLicense = storedLicense;
+      showMainScreen();
+    } else {
+      showLicenseScreen();
     }
+  }
 
-    function decrypt() {
-      const encrypted = document.getElementById("text").value.trim();
-      const key = document.getElementById("key").value;
-      if (!encrypted || !key) return alert("رمزگذاری‌شده و رمز عبور را وارد کنید.");
+  window.onload = init;
 
-      const emojiBlocks = encrypted.split(" ");
-      const keyCodes = [...key].map(c => c.charCodeAt(0));
-      const codes = emojiBlocks.map(block => emojiToNumber(block));
-      const decrypted = codes.map((code, i) => String.fromCharCode(code ^ keyCodes[i % keyCodes.length])).join("");
-      document.getElementById("output").innerText = decrypted;
+  document.getElementById("btn-verify").onclick = async () => {
+    clearError();
+    const code = document.getElementById("license-input").value.trim();
+    if (!code) {
+      showError("لطفاً کد لایسنس را وارد کنید.");
+      return;
     }
-
-    function copyOutput() {
-      const out = document.getElementById("output").innerText;
-      navigator.clipboard.writeText(out).then(() => alert("خروجی کپی شد!"));
+    try {
+      await verifyLicense(code);
+      showMainScreen();
+    } catch (e) {
+      showError(e);
     }
-  </script>
+  };
+
+  document.getElementById("btn-convert").onclick = () => {
+    const text = document.getElementById("text-input").value;
+    const output = textToEmoji(text);
+    document.getElementById("output").textContent = output;
+  };
+
+  document.getElementById("btn-logout").onclick = () => {
+    currentLicense = null;
+    localStorage.removeItem('license');
+    localStorage.removeItem('deviceId');
+    showLicenseScreen();
+    document.getElementById("license-input").value = "";
+    document.getElementById("text-input").value = "";
+    document.getElementById("output").textContent = "";
+  };
+</script>
+
 </body>
 </html>
